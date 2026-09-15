@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 320" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="860" height="320" rx="12" fill="#fafafa"/>
+  <rect width="860" height="320" rx="12" fill="none" stroke="#e0e0e0"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">闭包捕获的是名字，不是当时的值</text>
+
+  <rect x="30" y="56" width="390" height="220" rx="10" fill="#ffebee" stroke="#c62828" stroke-width="2"/>
+  <text x="225" y="84" text-anchor="middle" font-size="14" font-weight="bold" fill="#c62828">错：lambda: i</text>
+  <rect x="55" y="104" width="80" height="32" rx="6" fill="#fff" stroke="#c62828"/>
+  <text x="95" y="126" text-anchor="middle" font-size="12">f0</text>
+  <rect x="55" y="148" width="80" height="32" rx="6" fill="#fff" stroke="#c62828"/>
+  <text x="95" y="170" text-anchor="middle" font-size="12">f1</text>
+  <rect x="55" y="192" width="80" height="32" rx="6" fill="#fff" stroke="#c62828"/>
+  <text x="95" y="214" text-anchor="middle" font-size="12">f2</text>
+  <rect x="220" y="140" width="160" height="56" rx="8" fill="#ffcdd2" stroke="#c62828" stroke-width="1.5"/>
+  <text x="300" y="164" text-anchor="middle" font-size="13" font-weight="bold" fill="#b71c1c">同一个 cell</text>
+  <text x="300" y="184" text-anchor="middle" font-size="12" fill="#c62828">i = 2（循环结束）</text>
+  <line x1="135" y1="120" x2="218" y2="160" stroke="#c62828" stroke-width="2"/>
+  <line x1="135" y1="164" x2="218" y2="168" stroke="#c62828" stroke-width="2"/>
+  <line x1="135" y1="208" x2="218" y2="176" stroke="#c62828" stroke-width="2"/>
+  <text x="225" y="256" text-anchor="middle" font-size="13" fill="#c62828">调用时读 cell → [2, 2, 2]</text>
+
+  <rect x="440" y="56" width="390" height="220" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="635" y="84" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">对：lambda i=i: i</text>
+  <rect x="470" y="110" width="70" height="32" rx="6" fill="#fff" stroke="#2e7d32"/>
+  <text x="505" y="132" text-anchor="middle" font-size="12">f0</text>
+  <rect x="470" y="160" width="70" height="32" rx="6" fill="#fff" stroke="#2e7d32"/>
+  <text x="505" y="182" text-anchor="middle" font-size="12">f1</text>
+  <rect x="470" y="210" width="70" height="32" rx="6" fill="#fff" stroke="#2e7d32"/>
+  <text x="505" y="232" text-anchor="middle" font-size="12">f2</text>
+  <rect x="580" y="104" width="210" height="36" rx="6" fill="#c8e6c9" stroke="#2e7d32"/>
+  <text x="685" y="128" text-anchor="middle" font-size="12">__defaults__ = (0,)</text>
+  <rect x="580" y="154" width="210" height="36" rx="6" fill="#c8e6c9" stroke="#2e7d32"/>
+  <text x="685" y="178" text-anchor="middle" font-size="12">__defaults__ = (1,)</text>
+  <rect x="580" y="204" width="210" height="36" rx="6" fill="#c8e6c9" stroke="#2e7d32"/>
+  <text x="685" y="228" text-anchor="middle" font-size="12">__defaults__ = (2,)</text>
+  <line x1="540" y1="126" x2="578" y2="122" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="540" y1="176" x2="578" y2="172" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="540" y1="226" x2="578" y2="222" stroke="#2e7d32" stroke-width="2"/>
+
+  <text x="430" y="304" text-anchor="middle" font-size="12" fill="#78909c">默认参数「只求值一次」在这里变成特性：每次 lambda 执行 def，把当前 i 写进这份函数的 __defaults__。</text>
+</svg>

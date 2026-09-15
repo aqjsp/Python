@@ -92,6 +92,8 @@ CPython 对象模型是到处改引用计数。没有 GIL 时，每个 `Py_INCRE
 
 C++ 里这相当于：整个运行时一把 `std::mutex`，所有「碰对象图」的代码都得持有。没有人会给 C++ 标准库这么设计；CPython 是历史路径依赖加上「扩展生态已经按这个假设写了二十年」。
 
+![GIL：同一时刻只有一个线程在跑 Python bytecode](../image/gil-threads.svg)
+
 ### 3、一个进程一把，还是一个解释器一把
 
 3.12 之前：一个进程一把 GIL。3.12 的 PEP 684 给每个 sub-interpreter 独立的 GIL，隔离模块状态，用来做「进程内多解释器」。这不是取消 GIL，是把锁的粒度从进程收到解释器。默认你 `python app.py` 仍是一把锁。
@@ -574,6 +576,8 @@ asyncio.run(main())
 `async def` 返回 coroutine 对象，不跑。`await` 把它交给事件循环。循环在当前线程里轮询就绪的 I/O，恢复对应 coroutine。同一时刻只有一个 coroutine 在跑 Python——仍然受 GIL 管，而且通常根本没有第二个 Python 线程。
 
 `create_task` 把 coroutine 调度成 `Task`（`Future` 的子类）。只 `await fetch(1)` 再 `await fetch(2)` 是串行；先 `create_task` 两个再 `await`，等待才重叠。
+
+![asyncio：一个线程上协作，await 才让出循环](../image/asyncio-loop.svg)
 
 3.11 的 `TaskGroup` 把「一组任务、一个失败全取消」收成结构化并发：
 

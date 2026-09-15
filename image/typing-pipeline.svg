@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 260" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="860" height="260" rx="12" fill="#fafafa"/>
+  <rect width="860" height="260" rx="12" fill="none" stroke="#e0e0e0"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">注解是元数据：检查器读，解释器默认不读</text>
+
+  <rect x="40" y="56" width="240" height="120" rx="10" fill="#eceff1" stroke="#546e7a" stroke-width="2"/>
+  <text x="160" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#37474f">def f(x: bytes)</text>
+  <text x="160" y="114" text-anchor="middle" font-size="12" fill="#546e7a">运行时 f("hi")</text>
+  <text x="160" y="138" text-anchor="middle" font-size="12" fill="#c62828">CPython 照跑，炸在 .decode</text>
+  <text x="160" y="158" text-anchor="middle" font-size="11" fill="#78909c">__annotations__ 只是 dict</text>
+
+  <rect x="310" y="56" width="240" height="120" rx="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="430" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#1b5e20">pyright / mypy</text>
+  <text x="430" y="114" text-anchor="middle" font-size="12" fill="#2e7d32">CR 里标红</text>
+  <text x="430" y="138" text-anchor="middle" font-size="12" fill="#2e7d32">str 没有 decode</text>
+  <text x="430" y="158" text-anchor="middle" font-size="11" fill="#78909c">没有 CI 就是注释</text>
+
+  <rect x="580" y="56" width="240" height="120" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="700" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">运行时谁在读</text>
+  <text x="700" y="114" text-anchor="middle" font-size="12" fill="#e65100">pydantic 校验</text>
+  <text x="700" y="138" text-anchor="middle" font-size="12" fill="#e65100">dataclass 只生成字段</text>
+  <text x="700" y="158" text-anchor="middle" font-size="11" fill="#78909c">FastAPI / beartype</text>
+
+  <text x="430" y="206" text-anchor="middle" font-size="13" fill="#37474f">落地顺序：先 API schema，再核心领域。别一上来全仓库 Any 战争。</text>
+  <text x="430" y="230" text-anchor="middle" font-size="12" fill="#78909c">C++ / Go 类型是语言强制。Python 把强制做成可选工具链。</text>
+</svg>

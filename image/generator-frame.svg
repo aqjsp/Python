@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 340" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="860" height="340" rx="12" fill="#fafafa"/>
+  <rect width="860" height="340" rx="12" fill="none" stroke="#e0e0e0"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">yield 把栈帧冻在生成器对象上</text>
+
+  <rect x="40" y="56" width="200" height="88" rx="10" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="140" y="88" text-anchor="middle" font-size="13" font-weight="bold" fill="#1565c0">countdown(3)</text>
+  <text x="140" y="112" text-anchor="middle" font-size="12" fill="#1565c0">不跑函数体</text>
+  <text x="140" y="130" text-anchor="middle" font-size="11" fill="#546e7a">只造 generator</text>
+
+  <line x1="240" y1="100" x2="310" y2="100" stroke="#1565c0" stroke-width="2"/>
+  <polygon points="310,100 298,94 298,106" fill="#1565c0"/>
+
+  <rect x="320" y="50" width="220" height="100" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="430" y="78" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">generator 对象</text>
+  <text x="430" y="100" text-anchor="middle" font-size="12" fill="#e65100">局部 n、指令指针</text>
+  <text x="430" y="120" text-anchor="middle" font-size="12" fill="#e65100">求值栈 全部冻住</text>
+  <text x="430" y="138" text-anchor="middle" font-size="11" fill="#546e7a">gi_frame / gi_running</text>
+
+  <line x1="540" y1="100" x2="610" y2="100" stroke="#e65100" stroke-width="2"/>
+  <polygon points="610,100 598,94 598,106" fill="#e65100"/>
+  <text x="575" y="88" font-size="11" fill="#e65100">next</text>
+
+  <rect x="620" y="50" width="200" height="100" rx="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="720" y="84" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">交出 3, 2, 1</text>
+  <text x="720" y="110" text-anchor="middle" font-size="12" fill="#2e7d32">每次 next 解冻</text>
+  <text x="720" y="128" text-anchor="middle" font-size="12" fill="#2e7d32">跑到下一个 yield</text>
+
+  <rect x="40" y="180" width="780" height="120" rx="10" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+  <text x="430" y="210" text-anchor="middle" font-size="13" font-weight="bold" fill="#6a1b9a">send / throw / close 都是对着冻住的帧动手</text>
+  <text x="430" y="236" text-anchor="middle" font-size="12" fill="#6a1b9a">send(x) 把 x 变成 yield 表达式的值　　throw 在 yield 点注入异常</text>
+  <text x="430" y="258" text-anchor="middle" font-size="12" fill="#6a1b9a">close → GeneratorExit；持锁 / 文件必须 try/finally，否则没耗尽就泄漏</text>
+  <text x="430" y="280" text-anchor="middle" font-size="12" fill="#78909c">yield 协程是旧路。现在的协程是 async/await，事件循环驱动，不是 next()。</text>
+</svg>

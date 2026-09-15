@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 280" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="900" height="280" rx="12" fill="#fafafa"/>
+  <rect width="900" height="280" rx="12" fill="none" stroke="#e0e0e0"/>
+  <text x="450" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">asyncio：一个线程上协作，await 才让出循环</text>
+
+  <rect x="40" y="56" width="820" height="44" rx="8" fill="#e8eaf6" stroke="#3f51b5" stroke-width="2"/>
+  <text x="450" y="84" text-anchor="middle" font-size="14" font-weight="bold" fill="#3f51b5">事件循环（通常就这一条 OS 线程）</text>
+
+  <rect x="40" y="120" width="240" height="80" rx="10" fill="#c5cae9" stroke="#3f51b5" stroke-width="2"/>
+  <text x="160" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a237e">Task A 跑着</text>
+  <text x="160" y="174" text-anchor="middle" font-size="12" fill="#3949ab">直到 await / 结束</text>
+  <rect x="300" y="120" width="240" height="80" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="420" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="#e65100">await sleep / recv</text>
+  <text x="420" y="174" text-anchor="middle" font-size="12" fill="#e65100">让出 · 循环去跑别人</text>
+  <rect x="560" y="120" width="300" height="80" rx="10" fill="#ffcdd2" stroke="#c62828" stroke-width="2"/>
+  <text x="710" y="150" text-anchor="middle" font-size="13" font-weight="bold" fill="#b71c1c">time.sleep / 同步 HTTP</text>
+  <text x="710" y="174" text-anchor="middle" font-size="12" fill="#c62828">堵住整个 loop → 全站卡死</text>
+
+  <text x="450" y="228" text-anchor="middle" font-size="13" fill="#37474f">create_task 两个再 await，等待才重叠。串行两个 await fetch 是排队。</text>
+  <text x="450" y="252" text-anchor="middle" font-size="12" fill="#78909c">阻塞调用丢 run_in_executor / to_thread。CPU 密集丢进程池，别放进循环。</text>
+</svg>

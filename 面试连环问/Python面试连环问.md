@@ -25,6 +25,8 @@ print(y)            # 1000：x 换绑，y 仍指旧 int
 
 函数传参同一套：形参是新名字，绑到同一个对象。看起来「int 像传值、list 像传引用」，本质都是传引用，差别只在对象能不能原地改。
 
+![名字绑定：两个名字指向同一份 list](../image/name-binding.svg)
+
 C++ 的 `int a = 1` 是盒子；`int& r = a` 才是绑名字。Go 的 `n int` 是值拷贝，`[]int` 拷的是 slice 头（底层数组共享）。Python 没有这层区分。面试听到「Python 传引用」要补一句：传的是对象引用，不是 C++ 那种可 reseat 的 `T&`。
 
 再追：**命名空间是什么？** 函数局部 3.11+ 是加速的局部数组（不是每步 dict），自由变量走 closure cell，模块和 class 体是 `dict`。`locals()` 在函数里是快照，改它不写回。
@@ -72,6 +74,8 @@ print(a, b, c)      # [[1,2,9], 3]  [[1,2,9], 3]  [[1,2], 3]
 
 **环怎么处理？** `deepcopy` 用 `memo` 字典：id → 新对象。先进 memo 再递归，环不会爆栈。自己写拷贝漏 memo，环上会无限递归。
 
+![浅拷贝共享内层对象，深拷贝递归复制](../image/copy-shallow-deep.svg)
+
 **切片是浅拷贝。** `a[:]` 新 list，元素指针一样。`l = l[:]` 切断的是外层绑定，不是嵌套对象。
 
 C++ `vector<T>` 拷贝构造按 T 的拷贝语义，`vector<unique_ptr<T>>` 根本不能拷。Go 的 `append(append([]T{}, xs...), )` 拷 slice 头+元素值；元素是指针则仍共享。Python 默认赋值从不拷对象，必须显式 `copy`。
@@ -93,6 +97,8 @@ print(f(1), f(2), f(3, ["x"]), f(4))
 # [1]  [1,2]  ['x', 3]  [1,2,4]
 print(f.__defaults__)     # ([1, 2, 4],)
 ```
+
+![默认参数在 def 时求值一次，所有没传该参数的调用共享那份 list](../image/default-arg.svg)
 
 往下追：**正确写法？** `None` 哨兵，函数体内新建。
 
@@ -117,6 +123,8 @@ C++ 默认参数是调用点填临时量，`void f(vector<int> v = {})` 每次�
 能说出口：`is` 比身份（`id()`，CPython 里是地址），`==` 走 `__eq__`。判断单例（`None` / `True` / `False` / `...`）用 `is`；比值用 `==`。不要写 `x == None`。
 
 往下追：**小整数 intern。** CPython 启动时把 `[-5, 256]` 做成单例池，池内 `is` 和 `==` 碰巧一致。池外每次 `int()` 可能是新对象。
+
+![小整数 intern：池内同一份对象，池外各造一份](../image/intern-pool.svg)
 
 ```python
 print(256 is 256)           # True，池内
@@ -148,6 +156,8 @@ C++ `==` 对指针比地址、对值类型比值；Go 的 `==` 对 interface 比
 
 往下追：**list 不是链表。** `pop(0)` / `insert(0, x)` 搬后面所有指针，一万次是平方。队列用 `collections.deque`。`+= [x]` 比 `append` 多一次临时 list 分配。
 
+![list 是连续的 PyObject* 数组，元素本身在堆上](../image/list-layout.svg)
+
 **dict 3.7+ 有序**是语言保证（3.6 CPython 已经有，3.7 写进规范）。实现是「哈希表 + 稠密条目数组」，迭代走条目数组，所以保插入序，且比 3.5 更省。`OrderedDict` 还提供 `move_to_end` / 按等值比较顺序，普通 dict 只保证迭代序。
 
 **set 无序**，3.14 之前不要依赖迭代顺序。`{1, 2}` 和 `{2, 1}` 相等。
@@ -161,6 +171,8 @@ C++：`vector` ≈ list（但装的是 T 不是指针，除非 `vector<T*>`）�
 ### 7、生成器和迭代器差什么？
 
 能说出口：迭代器是实现 `__next__` / `__iter__` 的对象，一次性、有状态。生成器是用 `yield` 写出来的迭代器，调用生成器函数返回生成器对象，不跑函数体；每次 `next` 跑到下一个 `yield`，帧冻住。
+
+![for 的反糖：iter → next → StopIteration](../image/iterator-protocol.svg)
 
 ```python
 def g():
@@ -188,6 +200,8 @@ C++ 的 iterator 是指针语义，ranges 是惰性视图。Go 1.23 `iter.Seq` �
 ### 8、装饰器怎么实现的，`functools.wraps` 干什么？
 
 能说出口：`@deco` 就是 `f = deco(f)`。`deco` 吃函数、返回函数（或原函数）。带参装饰器是三层：外层收参数、中层收函数、内层收调用。
+
+![带参装饰器三层：工厂 → deco(fn) → wrapper](../image/decorator-layers.svg)
 
 ```python
 from functools import wraps
@@ -219,6 +233,8 @@ C++ 没有装饰器，近亲是包装对象 / 宏。Go 中间件 `func(http.Hand
 
 能说出口：闭包绑的是**变量（cell）**，不是当时的值。循环里 `lambda: i` 全部指向同一个 `i`，函数真正跑的时候才去读，那时循环已经结束，`i` 是最后一次的值。
 
+![闭包延迟绑定：三个 lambda 共享一个 cell](../image/closure-late-binding.svg)
+
 ```python
 fs = [lambda: i for i in range(3)]
 print([f() for f in fs])        # [2, 2, 2]
@@ -244,6 +260,8 @@ C++ lambda `[=]` 按值捕获当时的副本，`[&]` 按引用，循环里 `&i` 
 往下追：**何时释放？** 阻塞 I/O / `sleep` 进内核前放；numpy 一类 C 扩展在纯 C 循环里主动放；纯 Python 按时间片（默认 5ms）让出——那是交错不是并行。CPU 密集纯 Python，多线程墙钟不降；I/O 密集能叠等待。
 
 **3.12：** PEP 684，每个 sub-interpreter 一把独立 GIL，不是取消 GIL。**3.13：** 可选 free-threaded 构建（PEP 703），**官方默认仍有 GIL**。扩展要适配；单线程有代价。面试别说「3.13 没 GIL 了」。
+
+![GIL：同一时刻只有一个线程在跑 Python bytecode](../image/gil-threads.svg)
 
 ```python
 import threading
@@ -276,6 +294,8 @@ C++ 没有进程级解释器锁，`std::thread` 算 CPU 能并行。Go 的 gorou
 | 混合 | 只加速 I/O 段 | 加速计算段 | I/O 用 asyncio，计算丢 executor |
 
 往下追：**asyncio 里调 `requests`？** 冻事件循环。Go 的 `http.Get` 会把 G 从 M 上卸下；`requests` 是阻塞，loop 那条线程睡在 syscall 上，别的协程全停。同步 SDK 用 `asyncio.to_thread` / `run_in_executor`。
+
+![asyncio：一个线程上协作，await 才让出循环](../image/asyncio-loop.svg)
 
 **进程的代价。** 启动（spawn 要重新 import）、pickle 参数和返回值、共享内存才免拷。macOS / Windows 默认 spawn，入口必须 `if __name__ == "__main__"`。循环对象、lambda、生成器 pickle 不了。
 
@@ -324,6 +344,8 @@ import gc; gc.collect()     # 破环
 
 往下追：**哪些对象进 GC 跟踪？** 可能参与环的容器（list/dict/用户 class）。`int` / `str` / `bytes` 不参与循环检测。`gc.get_objects()` 不是「所有堆对象」。
 
+![循环引用：度数到不了 0，分代 GC 才收](../image/gc-cycle.svg)
+
 **`__del__` 和环。** 带终结器的环，GC 不敢随便收（3.4 之后大多数能收，但仍可能进 `gc.garbage`）。资源不要靠 `__del__`，用 `with` / `weakref.finalize`。
 
 **弱引用。** `weakref.ref(obj)` 不增加计数，对象死了变 `None`。缓存、观察者、打断环用它。
@@ -354,11 +376,15 @@ print(Upperstr("ab"))       # AB
 
 C++ 构造函数是「分配 + 初始化」绑在一起（placement new 才拆开）。Go 没有构造，`NewT()` 是普通函数。Python 把分配和初始化拆成两个钩子，面试要能说出「单例为什么不能只写 `__init__`」：`__init__` 拦不住分配。
 
+![Box()：先 __new__ 分配，再 __init__ 初始化](../image/new-vs-init.svg)
+
 ---
 
 ### 15、MRO 是什么，`super()` 找的是父类吗？
 
 能说出口：MRO 是方法解析顺序，单继承就是自己往上走到 `object`。多继承用 **C3 线性化**。`super()` **不是「父类」**，是「当前类在**该实例 MRO** 上的下一个」。
+
+![菱形继承：super() 沿 MRO 走，不是沿父类指针](../image/mro-diamond.svg)
 
 ```python
 class A:
@@ -404,6 +430,8 @@ print(c.x)                  # 1，property 是数据描述符，盖不住
 
 查找顺序（简化）：数据描述符 → 实例 dict → 非数据描述符 / 类属性 → `__getattr__`。
 
+![属性查找：数据描述符优先于实例 dict](../image/descriptor-lookup.svg)
+
 C++ 成员函数编译期定 `this`；Go `obj.Method()` 是 `T.Method(obj)` 的糖。Python 把绑定做成运行时协议。自己写描述符记住 `__set_name__`（3.6+）拿字段名，数据存在实例 dict，别存在描述符对象上（那是所有实例共享）。
 
 ---
@@ -411,6 +439,8 @@ C++ 成员函数编译期定 `this`；Go `obj.Method()` 是 `T.Method(obj)` 的�
 ### 17、`with` 干什么，上下文管理器协议是什么？
 
 能说出口：`with expr as x` 调 `cm = expr; x = cm.__enter__()`，离开块（正常或异常）调 `cm.__exit__(exc_type, exc, tb)`。`__exit__` 返回真值会**吞掉**异常。文件、锁、租约、事务用它，不要靠 GC 关资源。
+
+![with 对齐 C++ 词法作用域，不是 Go defer](../image/with-vs-raii.svg)
 
 ```python
 class Lock:
@@ -534,6 +564,8 @@ C++ 头文件循环用前向声明 + 指针。Go **禁止** import cycle，编�
 
 落地顺序：先边界 schema（API JSON），再核心领域，别全仓库 `Any`。细节在类型注解篇。面试答「注解只是提示」不够，要补「谁在读它」：检查器、pydantic、dataclass。
 
+![注解是元数据：检查器读，解释器默认不读](../image/typing-pipeline.svg)
+
 C++ / Go 的类型是语言强制。Python 把强制做成可选工具链。没有 CI 里的 pyright，注解就是注释。
 
 再追：**`list[int]` 运行时能 `isinstance(xs, list[int])` 吗？** 3.9+ `list[int]` 是泛型别名，`isinstance` 对下标后的内置泛型会 `TypeError`（3.9–3.10）或只认 origin。运行时检查用 pydantic / 自己看元素，不要对 `list[int]` 做 isinstance。`get_origin` / `get_args` 是给写检查器插件的人用的。
@@ -626,6 +658,8 @@ C++ 原子是 `std::atomic`，语句从来不是原子。Go 的 map 并发读写
 能说出口：**3.7 起语言保证**插入序：先插入的 key，迭代先出来。3.6 是 CPython 实现细节（紧凑 dict 的副产品），别在 3.6 代码里当保证。3.5 及更早无序，`{}` 迭代顺序和哈希种子有关。
 
 往下追：**实现。** 紧凑 dict：哈希表存索引，条目存在稠密数组。删除是在条目上留 dummy，迭代跳过。`popitem()` 默认 LIFO（最后一个插入的）。`reversed(d)` 3.8+ 合法。
+
+![compact dict：稀疏索引表 + 按插入序的稠密 entries](../image/compact-dict.svg)
 
 **`OrderedDict` 还要吗？** 要 `move_to_end`、按相等比较「顺序也相同」、或对 3.6- 承诺有序，才用。普通「JSON object 进出、配置、kwargs」用 dict。`OrderedDict` 更重，等值还比顺序。
 

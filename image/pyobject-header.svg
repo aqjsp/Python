@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="860" height="300" rx="12" fill="#fafafa"/>
+  <rect width="860" height="300" rx="12" fill="none" stroke="#e0e0e0"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">PyObject 头：每个堆对象都有 ob_refcnt + ob_type</text>
+
+  <rect x="80" y="60" width="700" height="130" rx="12" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <rect x="100" y="88" width="200" height="80" rx="8" fill="#bbdefb" stroke="#1565c0"/>
+  <text x="200" y="120" text-anchor="middle" font-size="14" font-weight="bold" fill="#0d47a1">ob_refcnt</text>
+  <text x="200" y="144" text-anchor="middle" font-size="12" fill="#1565c0">名字 / 容器 / 参数 各 +1</text>
+  <rect x="330" y="88" width="200" height="80" rx="8" fill="#c5cae9" stroke="#3f51b5"/>
+  <text x="430" y="120" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a237e">ob_type</text>
+  <text x="430" y="144" text-anchor="middle" font-size="12" fill="#3f51b5">决定 dealloc / traverse</text>
+  <rect x="560" y="88" width="200" height="80" rx="8" fill="#ffe0b2" stroke="#e65100"/>
+  <text x="660" y="120" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">payload</text>
+  <text x="660" y="144" text-anchor="middle" font-size="12" fill="#e65100">int 位数 / list 槽 / str</text>
+
+  <text x="430" y="220" text-anchor="middle" font-size="13" fill="#37474f">sys.getsizeof 是这个对象自己，不含它指向的子对象，更不等于 RSS。</text>
+  <text x="430" y="244" text-anchor="middle" font-size="13" fill="#37474f">小整数约 28 字节，不是 4。C++ int 在栈上；Python int 永远是堆上的 PyLongObject。</text>
+  <text x="430" y="272" text-anchor="middle" font-size="12" fill="#78909c">getrefcount(obj) 会偏高：参数本身就是一次引用。</text>
+</svg>

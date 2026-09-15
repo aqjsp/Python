@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 280" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="860" height="280" rx="12" fill="#fafafa"/>
+  <rect width="860" height="280" rx="12" fill="none" stroke="#e0e0e0"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">带参装饰器必须三层：工厂 → 装饰器 → 包装函数</text>
+
+  <rect x="40" y="60" width="180" height="80" rx="10" fill="#e8eaf6" stroke="#3f51b5" stroke-width="2"/>
+  <text x="130" y="92" text-anchor="middle" font-size="14" font-weight="bold" fill="#3f51b5">@route("/login")</text>
+  <text x="130" y="116" text-anchor="middle" font-size="12" fill="#3f51b5">先调用工厂</text>
+
+  <line x1="220" y1="100" x2="280" y2="100" stroke="#3f51b5" stroke-width="2"/>
+  <polygon points="280,100 268,94 268,106" fill="#3f51b5"/>
+
+  <rect x="290" y="60" width="180" height="80" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="380" y="92" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">deco(fn)</text>
+  <text x="380" y="116" text-anchor="middle" font-size="12" fill="#e65100">接收函数对象</text>
+
+  <line x1="470" y1="100" x2="530" y2="100" stroke="#e65100" stroke-width="2"/>
+  <polygon points="530,100 518,94 518,106" fill="#e65100"/>
+
+  <rect x="540" y="60" width="280" height="80" rx="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="680" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">inner / wrapper</text>
+  <text x="680" y="112" text-anchor="middle" font-size="12" fill="#2e7d32">名字 f 绑到它　　@wraps 把 __name__ 拷回</text>
+  <text x="680" y="128" text-anchor="middle" font-size="11" fill="#546e7a">丢了 __name__，路由表会互相覆盖</text>
+
+  <rect x="40" y="170" width="780" height="80" rx="10" fill="#fff8e1" stroke="#f9a825"/>
+  <text x="430" y="198" text-anchor="middle" font-size="13" fill="#e65100">叠放：靠近 def 的先执行。@a @b def f  ≡  f = a(b(f))</text>
+  <text x="430" y="222" text-anchor="middle" font-size="12" fill="#5d4037">装饰方法时 inner 的第一个参数才是 self。classmethod 要先于自定义装饰器，否则拿到的是 function 不是 classmethod。</text>
+  <text x="430" y="258" text-anchor="middle" font-size="12" fill="#78909c">装饰器在 import 时跑，不是第一次调用时。副作用发生在导入期。</text>
+</svg>

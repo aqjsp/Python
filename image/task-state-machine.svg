@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="900" height="260" rx="12" fill="#fafafa"/>
+  <rect width="900" height="260" rx="12" fill="none" stroke="#e0e0e0"/>
+  <text x="450" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">任务状态机：终态不能再转，RUNNING→PENDING 是重试</text>
+
+  <rect x="40" y="80" width="130" height="50" rx="25" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="105" y="112" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">pending</text>
+  <rect x="250" y="80" width="130" height="50" rx="25" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="315" y="112" text-anchor="middle" font-size="14" font-weight="bold" fill="#1565c0">running</text>
+  <rect x="480" y="50" width="130" height="50" rx="25" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="545" y="82" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">success</text>
+  <rect x="480" y="120" width="130" height="50" rx="25" fill="#ffcdd2" stroke="#c62828" stroke-width="2"/>
+  <text x="545" y="152" text-anchor="middle" font-size="14" font-weight="bold" fill="#c62828">failed</text>
+  <rect x="700" y="80" width="150" height="50" rx="25" fill="#eceff1" stroke="#546e7a" stroke-width="2"/>
+  <text x="775" y="112" text-anchor="middle" font-size="14" font-weight="bold" fill="#455a64">canceled</text>
+
+  <line x1="170" y1="105" x2="248" y2="105" stroke="#e65100" stroke-width="2"/>
+  <polygon points="248,105 236,99 236,111" fill="#e65100"/>
+  <text x="209" y="96" text-anchor="middle" font-size="10" fill="#e65100">claim</text>
+
+  <line x1="380" y1="95" x2="478" y2="75" stroke="#2e7d32" stroke-width="2"/>
+  <polygon points="478,75 466,78 470,88" fill="#2e7d32"/>
+  <line x1="380" y1="115" x2="478" y2="145" stroke="#c62828" stroke-width="2"/>
+  <polygon points="478,145 466,136 472,130" fill="#c62828"/>
+
+  <path d="M 315 130 L 315 190 L 105 190 L 105 130" fill="none" stroke="#f9a825" stroke-width="2"/>
+  <polygon points="105,130 99,142 111,142" fill="#f9a825"/>
+  <text x="210" y="184" text-anchor="middle" font-size="10" fill="#f57f17">5xx/超时 重试</text>
+
+  <line x1="105" y1="80" x2="775" y2="80" stroke="#546e7a" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="430" y="72" text-anchor="middle" font-size="10" fill="#546e7a">pending 取消</text>
+  <line x1="380" y1="105" x2="698" y2="105" stroke="#546e7a" stroke-width="1.5"/>
+  <polygon points="698,105 686,99 686,111" fill="#546e7a"/>
+  <text x="560" y="124" font-size="10" fill="#546e7a">running 取消 in-flight</text>
+
+  <text x="450" y="230" text-anchor="middle" font-size="13" fill="#37474f">success / failed / canceled 没有出边。非法转移抛 IllegalTransition。</text>
+  <text x="450" y="252" text-anchor="middle" font-size="12" fill="#78909c">4xx 直接 failed。取消必须能打断已经在跑的下游，不是只改一行状态。</text>
+</svg>

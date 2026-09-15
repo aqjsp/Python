@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 340" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="860" height="340" rx="12" fill="#fafafa"/>
+  <rect width="860" height="340" rx="12" fill="none" stroke="#e0e0e0"/>
+  <text x="430" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">pymalloc：小对象进 arena，free 很少还给 OS</text>
+
+  <rect x="40" y="56" width="780" height="70" rx="10" fill="#e8eaf6" stroke="#3f51b5" stroke-width="2"/>
+  <text x="430" y="86" text-anchor="middle" font-size="14" font-weight="bold" fill="#3f51b5">arena · 256 KiB 向 OS 要的大块</text>
+  <text x="430" y="108" text-anchor="middle" font-size="12" fill="#5c6bc0">整个 arena 空了才可能 munmap；长时间跑的服务里这个「除非」很少发生</text>
+
+  <rect x="40" y="146" width="240" height="80" rx="8" fill="#c5cae9" stroke="#3f51b5"/>
+  <text x="160" y="176" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a237e">pool 4KiB · 16B class</text>
+  <text x="160" y="200" text-anchor="middle" font-size="12" fill="#3949ab">block 16B 切片 + free list</text>
+  <rect x="310" y="146" width="240" height="80" rx="8" fill="#c5cae9" stroke="#3f51b5"/>
+  <text x="430" y="176" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a237e">pool 4KiB · 32B class</text>
+  <text x="430" y="200" text-anchor="middle" font-size="12" fill="#3949ab">绑死 size class，帮不上 64B</text>
+  <rect x="580" y="146" width="240" height="80" rx="8" fill="#ffe0b2" stroke="#e65100"/>
+  <text x="700" y="176" text-anchor="middle" font-size="13" font-weight="bold" fill="#e65100">&gt;512B · 系统 malloc</text>
+  <text x="700" y="200" text-anchor="middle" font-size="12" fill="#e65100">大 bytes 走 mmap，free 能掉 RSS</text>
+
+  <rect x="40" y="248" width="780" height="68" rx="8" fill="#fff8e1" stroke="#f9a825"/>
+  <text x="430" y="276" text-anchor="middle" font-size="13" fill="#e65100">cache.clear() 之后 len 降了，VmRSS 还在：小对象趴在 arena 里。</text>
+  <text x="430" y="298" text-anchor="middle" font-size="12" fill="#5d4037">gc.collect() 不 munmap。压 RSS 往往要进程重启、子进程隔离，或热点下沉。</text>
+</svg>

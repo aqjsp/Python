@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="900" height="360" rx="12" fill="#fafafa"/>
+  <rect width="900" height="360" rx="12" fill="none" stroke="#e0e0e0"/>
+  <text x="450" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">GIL：同一时刻只有一个线程在跑 Python bytecode</text>
+
+  <rect x="30" y="52" width="840" height="36" rx="6" fill="#eceff1" stroke="#90a4ae"/>
+  <text x="450" y="76" text-anchor="middle" font-size="13" font-weight="bold" fill="#455a64">进程内一把 GIL（3.12 起是每个解释器一把，默认仍是一把）</text>
+
+  <rect x="40" y="110" width="200" height="140" rx="10" fill="#ffcdd2" stroke="#c62828" stroke-width="2"/>
+  <text x="140" y="140" text-anchor="middle" font-size="14" font-weight="bold" fill="#b71c1c">线程 A</text>
+  <rect x="60" y="156" width="160" height="36" rx="6" fill="#c62828"/>
+  <text x="140" y="180" text-anchor="middle" font-size="12" fill="#fff">持有 GIL · 跑 bytecode</text>
+  <rect x="60" y="200" width="160" height="28" rx="6" fill="#ffcdd2" stroke="#c62828"/>
+  <text x="140" y="220" text-anchor="middle" font-size="11" fill="#c62828">CPU 密集走这条</text>
+
+  <rect x="270" y="110" width="200" height="140" rx="10" fill="#cfd8dc" stroke="#546e7a" stroke-width="2"/>
+  <text x="370" y="140" text-anchor="middle" font-size="14" font-weight="bold" fill="#37474f">线程 B</text>
+  <rect x="290" y="156" width="160" height="36" rx="6" fill="#90a4ae"/>
+  <text x="370" y="180" text-anchor="middle" font-size="12" fill="#fff">等 GIL</text>
+  <rect x="290" y="200" width="160" height="28" rx="6" fill="#eceff1" stroke="#546e7a"/>
+  <text x="370" y="220" text-anchor="middle" font-size="11" fill="#546e7a">墙钟 ≈ 串行</text>
+
+  <rect x="500" y="110" width="200" height="140" rx="10" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="600" y="140" text-anchor="middle" font-size="14" font-weight="bold" fill="#1b5e20">线程 C · I/O</text>
+  <rect x="520" y="156" width="160" height="36" rx="6" fill="#2e7d32"/>
+  <text x="600" y="180" text-anchor="middle" font-size="12" fill="#fff">recv 前放下 GIL</text>
+  <rect x="520" y="200" width="160" height="28" rx="6" fill="#e8f5e9" stroke="#2e7d32"/>
+  <text x="600" y="220" text-anchor="middle" font-size="11" fill="#2e7d32">别人能跑 Python</text>
+
+  <rect x="730" y="110" width="140" height="140" rx="10" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="800" y="140" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d47a1">进程池</text>
+  <text x="800" y="168" text-anchor="middle" font-size="12" fill="#1565c0">每进程</text>
+  <text x="800" y="188" text-anchor="middle" font-size="12" fill="#1565c0">一把 GIL</text>
+  <text x="800" y="216" text-anchor="middle" font-size="11" fill="#1565c0">CPU 才能并行</text>
+
+  <text x="450" y="280" text-anchor="middle" font-size="13" fill="#37474f">GIL 保护 ob_refcnt 和解释器内部，不保护 x += 1。list.append 碰巧像原子，check-then-act 不是。</text>
+  <text x="450" y="304" text-anchor="middle" font-size="13" fill="#37474f">3.13 free-threaded 是可选构建，官方包默认仍带 GIL。不要说「GIL 已经没了」。</text>
+  <text x="450" y="328" text-anchor="middle" font-size="12" fill="#78909c">Go M:N + 抢占 + 网通；C++ 1:1 OS 线程。CPython 默认是 1:1 线程外加一把解释器锁。</text>
+</svg>

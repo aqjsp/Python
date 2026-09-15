@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" font-family="system-ui, -apple-system, sans-serif">
+  <rect width="900" height="380" rx="12" fill="#fafafa"/>
+  <rect width="900" height="380" rx="12" fill="none" stroke="#e0e0e0"/>
+  <text x="450" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a1a2e">compact dict：稀疏索引 + 稠密 entries（3.6+ 有序）</text>
+
+  <rect x="30" y="58" width="360" height="250" rx="10" fill="#e8eaf6" stroke="#3f51b5" stroke-width="2"/>
+  <text x="210" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#3f51b5">indices（稀疏哈希表）</text>
+  <text x="210" y="110" text-anchor="middle" font-size="11" fill="#5c6bc0">槽内存的是 entries 下标，不是 KV</text>
+  <rect x="60" y="128" width="300" height="36" rx="4" fill="#c5cae9" stroke="#3f51b5"/>
+  <text x="210" y="152" text-anchor="middle" font-size="12" font-family="ui-monospace, monospace">[ -, 1, -, 0, -, -, 2, - ]</text>
+  <text x="210" y="188" text-anchor="middle" font-size="12" fill="#3949ab">hash(key) → 槽 → 下标 0 / 1 / 2</text>
+  <text x="210" y="216" text-anchor="middle" font-size="12" fill="#3949ab">空槽不占 24 字节 KV</text>
+  <text x="210" y="250" text-anchor="middle" font-size="12" fill="#546e7a">查找平均 O(1)，碰撞最坏 O(n)</text>
+  <text x="210" y="276" text-anchor="middle" font-size="12" fill="#546e7a">3.3+ 哈希随机化，防碰撞攻击</text>
+
+  <rect x="430" y="58" width="440" height="250" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="650" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">entries（插入序稠密数组）</text>
+  <rect x="460" y="118" width="380" height="36" rx="4" fill="#ffe0b2" stroke="#e65100"/>
+  <text x="650" y="142" text-anchor="middle" font-size="12" font-family="ui-monospace, monospace">0: hash, "b", 2</text>
+  <rect x="460" y="164" width="380" height="36" rx="4" fill="#ffe0b2" stroke="#e65100"/>
+  <text x="650" y="188" text-anchor="middle" font-size="12" font-family="ui-monospace, monospace">1: hash, "a", 1</text>
+  <rect x="460" y="210" width="380" height="36" rx="4" fill="#ffe0b2" stroke="#e65100"/>
+  <text x="650" y="234" text-anchor="middle" font-size="12" font-family="ui-monospace, monospace">2: hash, "c", 3</text>
+  <text x="650" y="276" text-anchor="middle" font-size="12" fill="#e65100">list(d) == ['b', 'a', 'c']　更新值不改位置</text>
+
+  <text x="450" y="340" text-anchor="middle" font-size="12" fill="#78909c">3.7 起语言保证插入序；删了再插排到最后。set 没有这个保证。</text>
+  <text x="450" y="362" text-anchor="middle" font-size="12" fill="#78909c">C++ unordered_map 无序；Go map 故意随机迭代。Python 把插入序做成契约。</text>
+</svg>
