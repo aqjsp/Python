@@ -773,7 +773,7 @@ Go 的 `package main` + `func main()`、C++ 的 `int main()` 是语言级入口�
 
 目录里有 `__init__.py`（3.3+ 命名空间包可以没有，但库代码写上更清楚）就是包。`pkg/__init__.py` 在 `import pkg` 时执行，常用来暴露公开 API：
 
-```
+```text
 mylib/
     __init__.py      # from .core import Client
     core.py
